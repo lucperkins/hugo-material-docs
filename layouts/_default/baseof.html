@@ -1,12 +1,18 @@
+{{- $theme    := .Site.Data.theme }}
+{{- $defaults := .Site.Data.defaults }}
+{{- $primary  := $theme.primary | default $defaults.primary }}
+{{- $direction := .Site.Params.direction | default $defaults.direction }}
 <!DOCTYPE html>
-<html>
+<html{{ with .Site.LanguageCode }} lang="{{ . }}"{{ end }} class="no-js">
   <head>
+    {{ partial "meta.html" . }}
+
     <title>
       {{ block "title" . }}{{ .Site.Title }}{{ end }}
     </title>
     {{ partial "css.html" . }}
   </head>
-  <body>
+  <body dir="">
     {{ block "main" . }}
     {{ end }}
   </body>

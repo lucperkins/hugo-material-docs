@@ -1,0 +1,13 @@
+{{- $defaults := .Site.Data.defaults }}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+{{- with .Param "description" }}
+<meta name="description" content="{{ . }}">
+{{- end }}
+{{- with .Param "author" }}
+<meta name="author" content="{{ . }}">
+{{- end }}
+
+<link rel="shortcut icon" href="{{ .Site.Data.favicon | default $defaults.favicon | relURL }}">
+<link rel="canonical" href="{{ .Permalink }}">
