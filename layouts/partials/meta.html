@@ -11,3 +11,4 @@
 
 <link rel="shortcut icon" href="{{ .Site.Data.favicon | default $defaults.favicon | relURL }}">
 <link rel="canonical" href="{{ .Permalink }}">
+{{ .Hugo.Generator }}

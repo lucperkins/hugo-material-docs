@@ -1,14 +1,22 @@
+{{- $defaults     := .Site.Data.defaults }}
 {{- $inServerMode := .Site.IsServer }}
 {{- $includePaths := (slice "node_modules") }}
-{{- $scss         := "scss/application.scss" }}
-{{- $cssOutput    := "css/style.css" }}
-{{- $devOpts      := (dict "targetPath" $cssOutput "includePaths" $includePaths "enableSourceMap" true) }}
-{{- $prodOpts     := (dict "targetPath" $cssOutput "includePaths" $includePaths "outputStyle" "compressed") }}
-{{- $cssOpts      := cond $inServerMode $devOpts $prodOpts }}
-{{- $css          := resources.Get $scss | resources.ExecuteAsTemplate $scss . | toCSS $cssOpts }}
+{{- $scss         := (slice "application") }}
+{{- if (in (.Site.Data.palette | default $defaults.palette) (slice "primary" "accent")) }}
+{{- $scss = $scss | append "application-palette" }}
+{{- end }}
+{{- range $scss }}
+{{- $path     := printf "scss/%s.scss" . }}
+{{- $output   := printf "css/%s.css" . }}
+{{- $devOpts  := (dict "targetPath" $output "includePaths" $includePaths "enableSourceMap" true) }}
+{{- $prodOpts := (dict "targetPath" $output "includePaths" $includePaths "outputStyle" "compressed") }}
+{{- $cssOpts  := cond $inServerMode $devOpts $prodOpts }}
+{{- $css      := resources.Get $path | resources.ExecuteAsTemplate $path . | toCSS $cssOpts }}
 {{- if $inServerMode }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}">
 {{- else }}
-{{- $prodCss      := $css | fingerprint }}
+{{- $prodCss := $css | fingerprint }}
 <link rel="stylesheet" href="{{ $prodCss.RelPermalink }}" integrity="{{ $prodCss.Data.Integrity }}">
 {{- end }}
+{{- end }}
+<link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
